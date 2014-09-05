@@ -1,0 +1,35 @@
+{
+  "name": "angular-types",
+  "version": "0.1.0",
+  "homepage": "https://github.com/decipherinc/angular-types",
+  "authors": [
+    "Christopher Hiller <chiller@decipherinc.com>"
+  ],
+  "description": "AngularJS introspection utilities",
+  "main": "types.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "angular",
+    "angularjs",
+    "type",
+    "types",
+    "checking",
+    "clone",
+    "copy"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "support",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "*"
+  }
+}
