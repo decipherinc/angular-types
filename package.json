@@ -10,6 +10,7 @@
     "angular": "^1.2.23"
   },
   "devDependencies": {
+    "angular": "^1.2.23",
     "chai": "^1.9.1",
     "grunt": "^0.4.5",
     "grunt-bump": "0.0.15",
