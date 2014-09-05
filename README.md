@@ -112,7 +112,7 @@ bower install angular-types
 
 ## Author
 
-Christopher Hiller <chiller@decipherinc.com>
+[Christopher Hiller](http://boneskull.github.io)
 
 ## License
 
