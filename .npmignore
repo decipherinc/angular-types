@@ -1,0 +1,5 @@
+test/
+**/.*
+Gruntfile.js
+*.min.js*
+bower.json

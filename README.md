@@ -96,6 +96,20 @@ define(['/path/to/types'], function(types) {
 });
 ```
 
+## Installation
+
+If using in NodeJS (a la Browserify):
+
+```
+npm install angular-types
+```
+
+Otherwise, use Bower:
+
+```
+bower install angular-types
+```
+
 ## Author
 
 Christopher Hiller <chiller@decipherinc.com>
