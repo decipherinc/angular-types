@@ -91,7 +91,8 @@ Using RequireJS, just require `types`.
 
 ```js
 define(['/path/to/types'], function(types) {
-  types.isInteger(
+  var quux = 1;
+  types.isInteger(quux);
 });
 ```
 
