@@ -204,7 +204,9 @@
           return value;
         }
         else if (isArray(value)) {
-          return value.slice().map(clone);
+          return value.slice().map(function (val) {
+            return isFunction(val.clone) ? val.clone() : clone(val);
+          });
         } else if (isDate(value)) {
           return new Date(value.getTime());
         } else if (types.isRegExp(value)) {
