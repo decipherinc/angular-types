@@ -204,6 +204,9 @@
           return value;
         }
         else if (isArray(value)) {
+          if (isFunction(value.clone)) {
+            return value.clone();
+          }
           return value.slice().map(function (val) {
             return isObject(val) && isFunction(val.clone) ? val.clone() : clone(val);
           });
