@@ -8,7 +8,6 @@
   "nonew": true,
   "undef": true,
   "strict": true,
-  "indent": 2,
   "expr": true,
   "newcap": false,
   "node": true,
