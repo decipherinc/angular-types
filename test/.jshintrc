@@ -9,7 +9,6 @@
   "undef": true,
   "strict": true,
   "browser": true,
-  "indent": 2,
   "expr": true,
   "newcap": false,
   "devel": true,
