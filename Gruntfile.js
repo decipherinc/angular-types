@@ -29,9 +29,12 @@ module.exports = function (grunt) {
           reporter: 'spec'
         }
       },
-      coveralls: {
+      lcov: {
         options: {
-          coveralls: true
+          reporter: 'mocha-lcov-reporter',
+          quiet: true,
+          instrument: true,
+          output: 'coverage/lcov.info'
         }
       },
       'html-cov': {
@@ -76,7 +79,7 @@ module.exports = function (grunt) {
 
   require('load-grunt-tasks')(grunt);
 
-  grunt.registerTask('test', ['jshint', 'mochacov:main', 'mochacov:coveralls']);
+  grunt.registerTask('test', ['jshint', 'mochacov:main', 'mochacov:lcov']);
   grunt.registerTask('html-cov', ['mochacov:html-cov']);
 
   grunt.registerTask('release', function(target) {

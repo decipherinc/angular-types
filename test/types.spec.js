@@ -1,11 +1,11 @@
 var expect = require('chai').expect,
     angular = require('angular'),
+    sinon = require('sinon'),
     types = require('../types');
 
 describe('types plugin', function () {
   'use strict';
 
-  console.log(types);
   it('should expose functions on angular object in global context', function () {
     expect(types.isNull).to.be.a('function');
   });
@@ -235,6 +235,12 @@ describe('types plugin', function () {
       expect(barClone.date).to.not.equal(bar.date);
       expect(barClone.herp.derp).to.be.true;
       expect(barClone.date.getTime()).to.equal(bar.date.getTime());
+
+      var baz = [];
+      baz.clone = sinon.stub().returns([]);
+      var bazClone = types.clone(baz);
+      expect(bazClone).to.eql([]);
+      expect(baz.clone).to.have.been.calledOnce;
     });
   });
 

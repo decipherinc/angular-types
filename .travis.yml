@@ -1,6 +1,15 @@
 language: node_js
 node_js:
-- "0.11"
-- "0.10"
+- '0.11'
+- '0.10'
 install: npm install
-# todo: add notifications
+addons:
+  code_climate:
+    repo_token:
+      secure: Bxw/v7b+ai99M6cKl33pnAcjs6h/cy0wQ47cGcJmbZC0vRutXDlQQEo7D1jyWNERAKxOBaOsH9rxjWQ5jOSNHoS5OadbfbE4PVOA0DRFQyGoYc8E/s8jRpnINw7n3ABxGtDWSAlD5FHkJzBDxnI+MXWK3HpSNduO6fDCYSRX0TQ=
+after_script:
+- npm install -g codeclimate-test-reporter
+- cat coverage/lcov.info | codeclimate
+notifications:
+  slack:
+    secure: XJdodGvmYezkJzRH765azpmeyd1VKWHFYSUMi2Uc16H8TGSax7UCxF3HLFvlnV109A7IURITLWyagJ7Hu6zk6QfMfVOI0I3DSkKahKIGSTNA+E4kfrhKAFN3GoZaryKKx69mIRRoURFFTGIRA1Ide72ILeYjGvC81agTAvETJIs=

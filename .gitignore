@@ -1,6 +1,5 @@
-support/
-node_modules/
+./support/
+./node_modules/
 npm-debug.log
-coverage/
-.coveralls.yml
-.grunt
+./coverage/
+./.grunt
