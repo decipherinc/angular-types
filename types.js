@@ -23,236 +23,282 @@
 
   'use strict';
 
+  var isNaN, isFinite, isUndefined, isArray, isDate, isElement, isObject, isString, isFunction,
+    isDefined, isNumber, extend, copy, forEach, toString, module, types, clone, type;
   root = root || window;
 
-  var isNaN = root.isNaN,
-      isFinite = root.isFinite,
+  isNaN = root.isNaN;
+  isFinite = root.isFinite;
+  isDefined = angular.isDefined;
+  isUndefined = angular.isUndefined;
+  isArray = angular.isArray;
+  isDate = angular.isDate;
+  isElement = angular.isElement;
+  isObject = angular.isObject;
+  isString = angular.isString;
+  isFunction = angular.isFunction;
+  isNumber = angular.isNumber;
+  extend = angular.extend;
+  copy = angular.copy;
+  forEach = angular.forEach;
 
-      isUndefined = angular.isUndefined,
-      isArray = angular.isArray,
-      isDate = angular.isDate,
-      isElement = angular.isElement,
-      isObject = angular.isObject,
-      isString = angular.isString,
-      isFunction = angular.isFunction,
-      isNumber = angular.isNumber,
+  /**
+   * Calls Object.prototype.toString() on anything.
+   * @param {*} value Thing to see what it is
+   * @returns {string}
+   */
+  toString = function toString(value) {
+    return Object.prototype.toString.call(value);
+  };
 
-      extend = angular.extend,
-      copy = angular.copy,
-      forEach = angular.forEach,
+  /**
+   * @module types
+   */
+  module = {};
 
-      toString = function toString(value) {
-        return Object.prototype.toString.call(value);
-      },
-      module = {},
+  /**
+   *
+   * @type {{
+   *  isArray: Function,
+   *  isDate: Function,
+   *  isElement: Function,
+   *  isObject: Function,
+   *  isNumber: Function,
+   *  isUndefined: Function,
+   *  isFunction: Function,
+   *  isDefined: Function,
+   *  isString: Function,
+   *  isNull: Function,
+   *  isBoolean: Function,
+   *  isNaN: Function,
+   *  isFinite: Function,
+   *  isInfinite: Function,
+   *  isArguments: Function,
+   *  isRegExp: Function,
+   *  isEmpty: Function,
+   *  isInteger: Function,
+   *  isFloat: Function,
+   *  isObjectish: Function,
+   *  isNotArray: Function,
+   *  isNotDate: Function,
+   *  isNotElement: Function,
+   *  isNotObject: Function,
+   *  isNotNumber: Function,
+   *  isNotUndefined: Function,
+   *  isNotFunction: Function,
+   *  isNotDefined: Function,
+   *  isNotString: Function,
+   *  isNotNull: Function,
+   *  isNotBoolean: Function,
+   *  isNotNaN: Function,
+   *  isNotFinite: Function,
+   *  isNotInfinite: Function,
+   *  isNotArguments: Function,
+   *  isNotRegExp: Function,
+   *  isNotEmpty: Function,
+   *  isNotInteger: Function,
+   *  isNotFloat: Function,
+   *  isNotObjectish: Function,
+   * }}
+   */
+  types = {
 
-      types = {
+    Defined: isDefined,
+    Undefined: isUndefined,
+    Array: isArray,
+    Date: isDate,
+    Element: isElement,
+    Object: isObject,
+    String: isString,
+    Function: isFunction,
+    Number: isNumber,
 
-        Undefined: isUndefined,
-        Array: isArray,
-        Date: isDate,
-        Element: isElement,
-        Object: isObject,
-        String: isString,
-        Function: isFunction,
-        Number: isNumber,
+    /**
+     * Returns `true` if the value is `null`.
+     * @param {*} [value] Value to evaluate
+     * @alias isNull
+     * @returns {boolean}
+     */
+    Null: function isNull(value) {
+      return value === null;
+    },
 
-        /**
-         * Returns `true` if the value is `null`.
-         * @param {*} [value] Value to evaluate
-         * @alias isNull
-         * @returns {boolean}
-         */
-        Null: function isNull(value) {
-          return value === null;
-        },
+    /**
+     * Returns `true` if the value is a boolean.
+     * @param {*} [value] Value to evaluate
+     * @returns {boolean}
+     * @alias isBoolean
+     */
+    Boolean: function isBoolean(value) {
+      return !!value === value;
+    },
 
-        /**
-         * Returns `true` if the value is a boolean.
-         * @param {*} [value] Value to evaluate
-         * @returns {boolean}
-         * @alias isBoolean
-         */
-        Boolean: function isBoolean(value) {
-          return !!value === value;
-        },
+    /**
+     * Returns `true` if the value is a NaN
+     * @param {*} [value] Value to evaluate
+     * @returns {boolean}
+     * @alias isNaN
+     */
+    NaN: function isNaN(value) {
+      return isNumber(value) && value != +value;
+    },
 
-        /**
-         * Returns `true` if the value is a NaN
-         * @param {*} [value] Value to evaluate
-         * @returns {boolean}
-         * @alias isNaN
-         */
-        NaN: function isNaN(value) {
-          return isNumber(value) && value != +value;
-        },
+    /**
+     * Returns `true` if the value is finite
+     * @param {*} [value] Value to evaluate
+     * @returns {boolean}
+     * @alias isFinite
+     */
+    Finite: function isFinite_(value) {
+      return isFinite(value) && !isNaN(+value);
+    },
 
-        /**
-         * Returns `true` if the value is finite
-         * @param {*} [value] Value to evaluate
-         * @returns {boolean}
-         * @alias isFinite
-         */
-        Finite: function isFinite_(value) {
-          return isFinite(value) && !isNaN(+value);
-        },
+    /**
+     * Returns `true` if the value is infinity
+     * @param {*} value Value to evaluate
+     * @returns {boolean}
+     * @alias isInfinite
+     */
+    Infinite: function isInfinite(value) {
+      return value === Infinity;
+    },
 
-        /**
-         * Returns `true` if the value is infinity
-         * @param {*} value Value to evaluate
-         * @returns {boolean}
-         * @alias isInfinite
-         */
-        Infinite: function isInfinite(value) {
-          return value === Infinity;
-        },
+    /**
+     * Returns `true` if the value is an Arguments object
+     * @param {*} [value] Value to evaluate
+     * @returns {boolean}
+     * @alias isArguments
+     */
+    Arguments: function isArguments(value) {
+      return value && types.isObjectish(value) && isNumber(value.length) &&
+        toString(value) === '[object Arguments]' || false;
+    },
 
-        /**
-         * Returns `true` if the value is an Arguments object
-         * @param {*} [value] Value to evaluate
-         * @returns {boolean}
-         * @alias isArguments
-         */
-        Arguments: function isArguments(value) {
-          return value && types.isObjectish(value) && isNumber(value.length) &&
-            toString(value) === '[object Arguments]' || false;
-        },
+    /**
+     * Returns `true` if the value is an Arguments object
+     * @param {*} [value] Value to evaluate
+     * @returns {boolean}
+     * @alias isRegExp
+     */
+    RegExp: function isRegExp(value) {
+      return value && types.isObjectish(value) && toString(value) === '[object RegExp]' ||
+        false;
+    },
 
-        /**
-         * Returns `true` if the value is an Arguments object
-         * @param {*} [value] Value to evaluate
-         * @returns {boolean}
-         * @alias isRegExp
-         */
-        RegExp: function isRegExp(value) {
-          return value && types.isObjectish(value) && toString(value) === '[object RegExp]' ||
-            false;
-        },
+    /**
+     * Returns `true` if the value is an objectlike thing with nothing in it.
+     * For Arrays, Strings or Arguments, this checks the `length`.
+     * @param {*} [value] Value to evaluate
+     * @returns {boolean}
+     * @alias isEmpty
+     */
+    Empty: function isEmpty(value) {
+      var retval = true,
+        length;
+      if (!isString(value) && !isArray(value) && !types.isArguments(value) &&
+        !types.isObject(value)) {
+        return retval;
+      }
 
-        /**
-         * Returns `true` if the value is an objectlike thing with nothing in it.
-         * For Arrays, Strings or Arguments, this checks the `length`.
-         * @param {*} [value] Value to evaluate
-         * @returns {boolean}
-         * @alias isEmpty
-         */
-        Empty: function isEmpty(value) {
-          var retval = true,
-              length;
-          if (!isString(value) && !isArray(value) && !types.isArguments(value) &&
-            !types.isObject(value)) {
-            return retval;
-          }
+      length = value.length;
+      if ((isArray(value) || isString(value) || types.isArguments(value) ||
+        types.isObjectish(value)) && isNumber(length)) {
+        return !length;
+      }
 
-          length = value.length;
-          if ((isArray(value) || isString(value) || types.isArguments(value) ||
-            types.isObjectish(value)) && isNumber(length)) {
-            return !length;
-          }
+      angular.forEach(value, function () {
+        return (retval = false);
+      });
 
-          angular.forEach(value, function () {
-            return (retval = false);
-          });
+      return retval;
+    },
 
-          return retval;
-        },
+    /**
+     * Returns `true` if the value is an integer.
+     * @param {*} [value] Value to evaluate
+     * @returns {boolean}
+     * @alias isInteger
+     */
+    Integer: function isInteger(value) {
+      return types.isNumber(value) && isFinite(value) && value % 1 === 0;
+    },
 
-        /**
-         * Returns `true` if the value is an integer.
-         * @param {*} [value] Value to evaluate
-         * @returns {boolean}
-         * @alias isInteger
-         */
-        Integer: function isInteger(value) {
-          return types.isNumber(value) && isFinite(value) && value % 1 === 0;
-        },
+    /**
+     * Returns `true` if the value is a float.
+     * @param {*} [value] Value to evaluate
+     * @returns {boolean}
+     * @alias isFloat
+     */
+    Float: function isFloat(value) {
+      return types.isNumber(value) && isFinite(value) && value % 1 !== 0;
+    },
 
-        /**
-         * Returns `true` if the value is a float.
-         * @param {*} [value] Value to evaluate
-         * @returns {boolean}
-         * @alias isFloat
-         */
-        Float: function isFloat(value) {
-          return types.isNumber(value) && isFinite(value) && value % 1 !== 0;
-        },
+    /**
+     * Returns `true` if the value accepts properties, and is not a string.
+     * @param {*} [value] Value to evaluate
+     * @returns {boolean}
+     * @alias isObjectish
+     */
+    Objectish: function isObjectish(value) {
+      return typeof value === 'object' && types.isNotNull(value);
+    }
+  };
+  clone = function clone(value, extra) {
+    var o;
 
-        /**
-         * Returns `true` if the value accepts properties, and is not a string.
-         * @param {*} [value] Value to evaluate
-         * @returns {boolean}
-         * @alias isObjectish
-         */
-        Objectish: function isObjectish(value) {
-          return typeof value === 'object' && types.isNotNull(value);
-        }
-      },
+    extra = extra || {};
+    if (types.isNotObjectish(value)) {
+      return value;
+    }
+    else if (isArray(value)) {
+      if (isFunction(value.clone)) {
+        return value.clone();
+      }
+      return value.slice().map(function (val) {
+        return isObject(val) && isFunction(val.clone) ? val.clone() : clone(val);
+      });
+    } else if (isDate(value)) {
+      return new Date(value.getTime());
+    } else if (types.isRegExp(value)) {
+      return new RegExp(value, value.toString().match(/[^\/]*$/)[0]);
+    } else if (isElement(value)) {
+      if (isFunction(value.clone)) {
+        return value.clone();
+      }
+      return value.cloneNode(true);
+    }
 
-      /**
-       * @summary Provides a deep clone of a value, retaining prototypes.
-       * @description Does not yet support cyclic objects.
-       * @todo Support cyclic objects.
-       * @param {*} value anything
-       * @param {Object} [extra] Extra stuff to put in a plain `Object` `value`; you could use this to potentially overwrite unique identifiers, or something.  If `value` is not a plain `Object` (`angular.isObject(value)` returns false`), this does nothing.
-       * @returns {*} anything
-       */
-      clone = function clone(value, extra) {
-        var o;
-
-        extra = extra || {};
-        if (types.isNotObjectish(value)) {
-          return value;
-        }
-        else if (isArray(value)) {
-          if (isFunction(value.clone)) {
-            return value.clone();
-          }
-          return value.slice().map(function (val) {
-            return isObject(val) && isFunction(val.clone) ? val.clone() : clone(val);
-          });
-        } else if (isDate(value)) {
-          return new Date(value.getTime());
-        } else if (types.isRegExp(value)) {
-          return new RegExp(value, value.toString().match(/[^\/]*$/)[0]);
-        } else if (isElement(value)) {
-          if (isFunction(value.clone)) {
-            return value.clone();
-          }
-          return value.cloneNode(true);
-        }
-
-        o = copy(value);
-        forEach(value, function (val, key) {
-          o[key] = types.isObjectish(val) && isFunction(val.clone) ? val.clone() : clone(val);
-        });
-        extend(o, extra);
-        return o;
-      },
-
-      type = function type(value) {
-        var var_type = null,
-            checkers = [
-              'isNull',
-              'isString',
-              'isArray',
-              'isDate',
-              'isRegExp',
-              'isArguments',
-              'isBoolean',
-              'isNumber',
-              'isUndefined',
-              'isFunction',
-              'isElement',
-              'isObject'
-            ],
-            i,
-            checker;
-        for (i = 0; i < checkers.length && !var_type; i++) {
-          checker = checkers[i];
-          types[checker](value) && (var_type = checker.substring(2).toLowerCase());
-        }
-        return var_type;
-      };
+    o = copy(value);
+    forEach(value, function (val, key) {
+      o[key] = types.isObjectish(val) && isFunction(val.clone) ? val.clone() : clone(val);
+    });
+    extend(o, extra);
+    return o;
+  };
+  type = function type(value) {
+    var var_type = null,
+      checkers = [
+        'isNull',
+        'isString',
+        'isArray',
+        'isDate',
+        'isRegExp',
+        'isArguments',
+        'isBoolean',
+        'isNumber',
+        'isUndefined',
+        'isFunction',
+        'isElement',
+        'isObject'
+      ],
+      i,
+      checker;
+    for (i = 0; i < checkers.length && !var_type; i++) {
+      checker = checkers[i];
+      types[checker](value) && (var_type = checker.substring(2).toLowerCase());
+    }
+    return var_type;
+  };
 
   forEach(types, function (fn, name) {
     module['is' + name] = types['is' + name] = fn;
