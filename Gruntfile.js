@@ -63,7 +63,6 @@ module.exports = function (grunt) {
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-          '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
           '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
           '* Copyright (c) <%= grunt.template.today("yyyy") %> Decipher, Inc.;' +
           ' Licensed <%= pkg.license %> */',
@@ -84,10 +83,11 @@ module.exports = function (grunt) {
 
   grunt.registerTask('release', function(target) {
     grunt.task.run('bump-only:' + target);
-    grunt.task.run('uglify');
+    grunt.task.run('build');
     grunt.task.run('bump-commit');
   });
-  // By default, lint and run all tests.
+
+  grunt.registerTask('build', ['uglify']);
   grunt.registerTask('default', ['test']);
 
 };

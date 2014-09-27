@@ -10,13 +10,13 @@
     "angular": "^1.2.23"
   },
   "devDependencies": {
-    "angular": "^1.2.23",
+    "angular": "git://github.com/boneskull/angular",
     "chai": "^1.9.1",
     "grunt": "^0.4.5",
     "grunt-bump": "0.0.15",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-contrib-uglify": "^0.6.0",
     "grunt-mocha-cov": "^0.3.0",
     "jsdom": "^1.0.0-pre.7",
     "jshint-stylish": "^0.4.0",
