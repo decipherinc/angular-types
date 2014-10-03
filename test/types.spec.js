@@ -235,12 +235,25 @@ describe('types plugin', function () {
       expect(barClone.date).to.not.equal(bar.date);
       expect(barClone.herp.derp).to.be.true;
       expect(barClone.date.getTime()).to.equal(bar.date.getTime());
+    });
 
-      var baz = [];
-      baz.clone = sinon.stub().returns([]);
-      var bazClone = types.clone(baz);
-      expect(bazClone).to.eql([]);
-      expect(baz.clone).to.have.been.calledOnce;
+    it('should clone a RegExp properly', function () {
+      var foo = {
+          re: /.*/gi
+        },
+        bar,
+        re;
+
+      expect(function () {
+        bar = types.clone(foo);
+      }).not.to.throw();
+
+      re = bar.re;
+      expect(re.global).to.be.true;
+      expect(re.ignoreCase).to.be.true;
+      expect(re.multiline).to.be.false;
+      expect(re.sticky).not.to.be.ok;
+      expect(re.source).to.equal('.*');
     });
   });
 

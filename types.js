@@ -244,7 +244,7 @@
     }
   };
   clone = function clone(value, extra) {
-    var o;
+    var o, flags;
 
     extra = extra || {};
     if (types.isNotObjectish(value)) {
@@ -260,7 +260,20 @@
     } else if (isDate(value)) {
       return new Date(value.getTime());
     } else if (types.isRegExp(value)) {
-      return new RegExp(value, value.toString().match(/[^\/]*$/)[0]);
+      flags = '';
+      if (value.global) {
+        flags += 'g';
+      }
+      if (value.ignoreCase) {
+        flags += 'i';
+      }
+      if (value.multiline) {
+        flags += 'm';
+      }
+      if (value.sticky) {
+        flags += 'y';
+      }
+      return new RegExp(value.source, flags);
     } else if (isElement(value)) {
       if (isFunction(value.clone)) {
         return value.clone();
