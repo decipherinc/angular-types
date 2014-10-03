@@ -1,6 +1,6 @@
 {
   "name": "angular-types",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "AngularJS introspection utilities",
   "main": "types.js",
   "directories": {
