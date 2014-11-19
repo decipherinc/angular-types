@@ -286,7 +286,6 @@
       o[key] = types.isObjectish(val) && isFunction(val.clone) ? val.clone() : clone(val);
     });
     extend(o, extra);
-    delete o.$$hashKey;
     return o;
   };
   type = function type(value) {
