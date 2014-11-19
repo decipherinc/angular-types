@@ -1,5 +1,5 @@
 var expect = require('chai').expect,
-    angular = require('angular'),
+    angular = require('angular-node'),
     sinon = require('sinon'),
     types = require('../types');
 

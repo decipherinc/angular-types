@@ -7,6 +7,7 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
     jshint: {
       main: [
         'Gruntfile.js',
@@ -19,7 +20,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Unit tests.
     mochacov: {
       options: {
         files: 'test/*.spec.js'
@@ -71,6 +71,15 @@ module.exports = function (grunt) {
       dist: {
         src: '<%= pkg.main %>',
         dest: 'types.min.js'
+      }
+    },
+
+    devUpdate: {
+      main: {
+        options: {
+          updateType: 'prompt',
+          semver: false
+        }
       }
     }
 

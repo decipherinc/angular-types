@@ -13,7 +13,7 @@
   if (typeof define === 'function' && define.amd) {
     define(['angular'], factory);
   } else if (typeof exports === 'object') {
-    module.exports = factory(require('angular'), global);
+    module.exports = factory(require('angular-node'), global);
     // otherwise, attach to global `angular` object.
   } else {
     angular = root.angular;
@@ -286,6 +286,7 @@
       o[key] = types.isObjectish(val) && isFunction(val.clone) ? val.clone() : clone(val);
     });
     extend(o, extra);
+    delete o.$$hashKey;
     return o;
   };
   type = function type(value) {
