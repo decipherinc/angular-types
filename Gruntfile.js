@@ -1,23 +1,26 @@
 'use strict';
 
 module.exports = function (grunt) {
-  var path = require('path');
-
-  require('time-grunt')(grunt);
+  var BANNER = '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+    '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
+    '* Copyright (c) <%= grunt.template.today("yyyy") %> FocusVision ' +
+    'Worldwide; Licensed <%= pkg.license %> */';
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    jshint: {
-      main: [
-        'Gruntfile.js',
-        '<%= pkg.main %>',
-        '<%= mochacov.options.files %>'
-      ],
+    eslint: {
+      main: '<%= pkg.main %>',
       options: {
-        jshintrc: true,
-        reporter: require('jshint-stylish')
-      }
+        configFile: '.eslintrc'
+      },
+      test: {
+        files: 'test/**/*.js',
+        options: {
+          configFile: 'test/.eslintrc'
+        }
+      },
+      tasks: 'Gruntfile.js'
     },
 
     mochacov: {
@@ -51,7 +54,13 @@ module.exports = function (grunt) {
         updateConfigs: ['pkg'],
         commit: true,
         commitMessage: 'Release v%VERSION%',
-        commitFiles: ['package.json', 'bower.json', 'types.min.js', 'types.min.js.map'],
+        commitFiles: [
+          'package.json',
+          'bower.json',
+          'types.js',
+          'types.min.js',
+          'types.min.js.map'
+        ],
         createTag: true,
         tagName: 'v%VERSION%',
         tagMessage: 'Version %VERSION%',
@@ -62,14 +71,11 @@ module.exports = function (grunt) {
 
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-          '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-          '* Copyright (c) <%= grunt.template.today("yyyy") %> Decipher, Inc.;' +
-          ' Licensed <%= pkg.license %> */',
+        banner: BANNER,
         sourceMap: true
       },
       dist: {
-        src: '<%= pkg.main %>',
+        src: 'types.js',
         dest: 'types.min.js'
       }
     },
@@ -81,22 +87,39 @@ module.exports = function (grunt) {
           semver: false
         }
       }
-    }
+    },
 
+    browserify: {
+      options: {
+        banner: BANNER,
+        transform: [
+          ['exposify', {
+            expose: {
+              angular: 'angular'
+            }
+          }]
+        ]
+      },
+      main: {
+        files: {
+          'types.js': '<%= pkg.main %>'
+        }
+      }
+    }
   });
 
   require('load-grunt-tasks')(grunt);
 
-  grunt.registerTask('test', ['jshint', 'mochacov:main', 'mochacov:lcov']);
+  grunt.registerTask('test', ['eslint', 'mochacov:main', 'mochacov:lcov']);
   grunt.registerTask('html-cov', ['mochacov:html-cov']);
 
-  grunt.registerTask('release', function(target) {
+  grunt.registerTask('release', function (target) {
     grunt.task.run('bump-only:' + target);
     grunt.task.run('build');
     grunt.task.run('bump-commit');
   });
 
-  grunt.registerTask('build', ['uglify']);
+  grunt.registerTask('build', ['browserify', 'uglify']);
   grunt.registerTask('default', ['test']);
 
 };

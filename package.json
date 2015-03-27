@@ -2,29 +2,26 @@
   "name": "angular-types",
   "version": "0.1.5",
   "description": "AngularJS introspection utilities",
-  "main": "types.js",
+  "main": "lib/types.js",
   "directories": {
     "test": "test"
   },
-  "peerDependencies": {
-    "angular-node": "^1.3.2"
-  },
   "devDependencies": {
-    "angular-node": "^1.3.2",
-    "chai": "^1.9.1",
+    "angular": "^1.3.15",
+    "angular-mocks": "^1.3.15",
+    "chai": "^2.2.0",
+    "exposify": "^0.3.0",
     "grunt": "^0.4.5",
-    "grunt-bump": "0.0.16",
+    "grunt-browserify": "^3.6.0",
+    "grunt-bump": "^0.3.0",
     "grunt-cli": "^0.1.13",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-uglify": "^0.6.0",
-    "grunt-dev-update": "^1.0.1",
-    "grunt-mocha-cov": "^0.3.0",
-    "jsdom": "^1.0.0-pre.7",
-    "jshint-stylish": "^1.0.0",
-    "load-grunt-tasks": "^1.0.0",
-    "mocha-lcov-reporter": "0.0.1",
-    "sinon": "^1.10.3",
-    "time-grunt": "^1.0.0"
+    "grunt-contrib-uglify": "^0.8.0",
+    "grunt-dev-update": "^1.1.0",
+    "grunt-eslint": "^9.0.0",
+    "grunt-mocha-cov": "^0.4.0",
+    "jsdom": "^4.0.5",
+    "load-grunt-tasks": "^3.1.0",
+    "mocha-lcov-reporter": "0.0.2"
   },
   "scripts": {
     "test": "grunt test"
@@ -51,7 +48,7 @@
   "config": {
     "blanket": {
       "pattern": [
-        "types.js"
+        "lib/types.js"
       ]
     }
   }

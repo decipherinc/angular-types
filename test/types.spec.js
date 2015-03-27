@@ -1,14 +1,22 @@
 var expect = require('chai').expect,
-    angular = require('angular-node'),
-    sinon = require('sinon'),
-    types = require('../types');
+  jsdom = require('jsdom');
+
+var types, angular;
+
+global.document = jsdom.jsdom('<html><head></head><body></body></html>');
+global.window = global.document.parentWindow;
+global.angular = {};
+angular = require('angular');
+global.window.angular.extend(angular, global.window.angular);
+types = require('../lib/types');
 
 describe('types plugin', function () {
   'use strict';
 
-  it('should expose functions on angular object in global context', function () {
-    expect(types.isNull).to.be.a('function');
-  });
+  it('should expose functions on angular object in global context',
+    function () {
+      expect(types.isNull).to.be.a('function');
+    });
 
   describe('isObjectish()', function () {
     it('should recognize a Date', function () {
@@ -60,19 +68,19 @@ describe('types plugin', function () {
   });
 
   describe('isNaN()', function () {
-    var isNaN = types.isNaN;
+    var isnan = types.isNaN;
 
     it('should recognize NaN', function () {
-      expect(isNaN(NaN)).to.be.true;
+      expect(isnan(NaN)).to.be.true;
     });
 
     it('should recognize not NaN', function () {
-      expect(isNaN(1)).to.be.false;
+      expect(isnan(1)).to.be.false;
     });
 
     it('should recognize Infinity', function () {
-      //noinspection DivideByZeroJS
-      expect(isNaN(1 / 0)).to.be.false;
+      // noinspection DivideByZeroJS
+      expect(isnan(1 / 0)).to.be.false;
     });
 
   });
@@ -200,7 +208,8 @@ describe('types plugin', function () {
       expect(type(null)).to.not.equal('function');
     });
     it('should recognize a DOM element', function () {
-      var document = require('jsdom').jsdom('<html><head></head><body></body></html>');
+      var document = require('jsdom').jsdom('<html><head></head><body>' +
+      '</body></html>');
       expect(type(document)).to.equal('element');
       expect(type(angular.element(document))).to.equal('element');
       expect(type(null)).to.not.equal('element');
@@ -209,6 +218,8 @@ describe('types plugin', function () {
 
   describe('clone()', function () {
     it('should clone', function () {
+      var barClone, bar, Bar;
+
       var Foo = function Foo() {
         this.frick = 'frack';
       };
@@ -216,7 +227,7 @@ describe('types plugin', function () {
         return this.frick + 'fruck';
       };
 
-      var Bar = function Bar() {
+      Bar = function Bar() {
         Foo.call(this);
         this.frick = 'frock';
         this.date = new Date();
@@ -226,10 +237,10 @@ describe('types plugin', function () {
       };
       Bar.prototype = Object.create(Foo.prototype);
 
-      var bar = new Bar();
+      bar = new Bar();
       expect(bar.baz()).to.equal('frockfruck');
 
-      var barClone = types.clone(bar);
+      barClone = types.clone(bar);
       expect(barClone.baz()).to.equal('frockfruck');
       expect(barClone.herp).to.not.equal(bar.herp);
       expect(barClone.date).to.not.equal(bar.date);
