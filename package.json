@@ -1,6 +1,6 @@
 {
   "name": "angular-types",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "AngularJS introspection utilities",
   "main": "lib/types.js",
   "directories": {
@@ -19,7 +19,7 @@
     "grunt-dev-update": "^1.1.0",
     "grunt-eslint": "^9.0.0",
     "grunt-mocha-cov": "^0.4.0",
-    "jsdom": "^4.0.5",
+    "jsdom": "^3.1.2",
     "load-grunt-tasks": "^3.1.0",
     "mocha-lcov-reporter": "0.0.2"
   },
